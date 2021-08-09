@@ -10,12 +10,14 @@ import org.springframework.context.ApplicationContext;
 public class EnhancedTaskManagerSpringApplication {
 
     public static void main(String[] args) {
-        User user = new User ("Che", "Guevara","Comandante");
+        User user = new User ("Che", "Guevara","Comandantes");
         ApplicationContext ctx = SpringApplication.run(EnhancedTaskManagerSpringApplication.class, args);
 
         UserDAO userDAO = ctx.getBean("userDAO", UserDAO.class);
         userDAO.createUser(user);
         userDAO.showAllUsers().forEach(u -> System.out.println(u.toString()));
+        System.out.println(userDAO.getMaxTaskId());
+        userDAO.getUserTasks("Comandante");
     }
 
 }

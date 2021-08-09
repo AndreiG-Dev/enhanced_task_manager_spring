@@ -1,6 +1,7 @@
 package com.andreig.enhanced_task_manager_spring.model;
 
 public class Task {
+    private int taskId;
     private String title;
     private String description;
 
@@ -10,6 +11,20 @@ public class Task {
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public Task(int taskId, String title, String description) {
+        this.taskId = taskId;
+        this.title = title;
+        this.description = description;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 
     public String getTitle() {

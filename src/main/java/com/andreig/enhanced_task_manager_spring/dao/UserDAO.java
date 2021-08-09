@@ -1,6 +1,7 @@
 package com.andreig.enhanced_task_manager_spring.dao;
 
 import com.andreig.enhanced_task_manager_spring.model.Task;
+import com.andreig.enhanced_task_manager_spring.model.TaskInfo;
 import com.andreig.enhanced_task_manager_spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -8,6 +9,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -30,10 +33,11 @@ public class UserDAO implements UserDAOService {
         }
         jdbcTemplate.update("INSERT INTO users VALUES(?, ?, ?)",
                 user.getFirstName(), user.getLastName(), user.getUserName());
+        System.out.println(USER_ADDED);
     }
 
     public void addTeamId(String userName, int id){
-        jdbcTemplate.update("UPDATE users SET teamId=?, WHERE userName=?", id, userName);
+        jdbcTemplate.update("UPDATE users SET teamId=? WHERE userName=?", id, userName);
     }
 
     public void assignTaskToTeam(int teamId, Task task){
@@ -45,17 +49,32 @@ public class UserDAO implements UserDAOService {
         return jdbcTemplate.query("SELECT * FROM users", new BeanPropertyRowMapper<>(User.class));
     }
 
+    public int getMaxTaskId(){
+        return jdbcTemplate.query("SELECT taskid FROM tasks", new BeanPropertyRowMapper<>(Task.class)).
+                stream().max(Comparator.comparingInt(Task::getTaskId)).get().getTaskId();
+    }
+
     @Override
     public void assignTask(String userName, Task task) {
-        String currentTasks = "";
-        jdbcTemplate.query("SELECT tasks FROM user WHERE userName=?", new BeanPropertyRowMapper<>(String.class),
+        jdbcTemplate.query("SELECT taskid FROM tasks WHERE userName=?", new BeanPropertyRowMapper<>(String.class),
                 userName);
-        jdbcTemplate.update("UPDATE user SET tasks=?, WHERE userName=?", currentTasks.toString(), userName);
+        String taskInfo = "Title: " + task.getTitle() + " /Description: " + task.getDescription() + "// ";
+    }
+
+    public List<String> gets(String userName){
+        return jdbcTemplate.query("SELECT tasks FROM users WHERE userName = ?",
+                new BeanPropertyRowMapper<>(String.class), userName);
     }
 
     @Override
     public List<Task> getUserTasks(String userName){
-        return jdbcTemplate.query("SELECT tasks FROM user WHERE userName = ?", new BeanPropertyRowMapper<>(),
-                userName);
+        List<Task> result = new ArrayList<>();
+
+        ArrayList<TaskInfo> s = (ArrayList<TaskInfo>) jdbcTemplate.query("SELECT taskid FROM users WHERE userName = ?",
+                new BeanPropertyRowMapper<>(TaskInfo.class), userName);
+
+        System.out.println(s.get(0).getInfo());
+
+        return result;
     }
 }
