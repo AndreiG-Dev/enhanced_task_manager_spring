@@ -5,10 +5,11 @@ import java.util.List;
 
 public class User {
 
+    private Integer userId;
     private String firstName;
     private String lastName;
     private String userName;
-    private int teamId;
+    private Integer teamId;
     private List<Task> taskList;
 
     public User() {
@@ -18,6 +19,22 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
+    }
+
+    public User(Integer userId, String firstName, String lastName, String userName, int teamId) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.teamId = teamId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {
@@ -44,11 +61,11 @@ public class User {
         this.userName = userName;
     }
 
-    public int getTeamId() {
+    public Integer getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(int teamId) {
+    public void setTeamId(Integer teamId) {
         this.teamId = teamId;
     }
 
